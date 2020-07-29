@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Zone.Domain;
-using Zone.Services;
-using Zone.ViewModels;
+using Zone.Website.Domain;
+using Zone.Website.Services;
+using Zone.Website.ViewModels;
 
-namespace Zone.Controllers
+namespace Zone.Website.Controllers
 {
     [Authorize(AuthenticationSchemes = SpotifyDefaults.AuthenticationScheme)]
     public class SpotifyController : Controller

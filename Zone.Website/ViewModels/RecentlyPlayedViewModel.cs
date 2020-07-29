@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Zone.ViewModels
+namespace Zone.Website.ViewModels
 {
     public class RecentlyPlayedViewModel
     {

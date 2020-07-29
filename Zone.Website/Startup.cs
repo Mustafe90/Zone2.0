@@ -10,8 +10,8 @@ using Spotify.OAuth;
 using System;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
-using Zone.Domain;
-using Zone.Services;
+using Zone.Website.Domain;
+using Zone.Website.Services;
 
 namespace Zone
 {

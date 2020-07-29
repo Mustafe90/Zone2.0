@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
 using Spotify.OAuth;
-using Zone.Services;
-using Zone.ViewModels;
+using Zone.Website.Services;
+using Zone.Website.ViewModels;
 
-namespace Zone.Domain
+namespace Zone.Website.Domain
 {
     public class SpotifyClientDomain
     {

@@ -1,4 +1,4 @@
-namespace Zone.ViewModels
+namespace Zone.Website.ViewModels
 {
     public class ErrorViewModel
     {

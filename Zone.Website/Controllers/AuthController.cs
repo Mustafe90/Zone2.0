@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Spotify.OAuth;
 
-namespace Zone.Controllers
+namespace Zone.Website.Controllers
 {
     [AllowAnonymous]
     public class AuthController : Controller
