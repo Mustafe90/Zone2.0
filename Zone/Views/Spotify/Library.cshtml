@@ -1,0 +1,155 @@
+﻿@using System.Collections
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using System.Web
+@using Spotify.OAuth
+@using Zone.ViewModels
+@model AlbumsViewModel
+
+<div class="container">
+
+    @*<h3>Currently Playing</h3>
+
+        <div class="card-deck">
+
+            @if (currentlyPlaying != null)
+            {
+                var classPlaying = currentlyPlaying.IsPlaying ? "bg-success" : "bg-white";
+
+                <form asp-action="Share" asp-controller="Spotify" method="post">
+                   <input name="TrackId" type="hidden" asp-for="Item3.Track.Id"/>
+                    <div class="card @classPlaying border-0" style="min-width: 340px; max-width: 340px;">
+                        <img src="@currentlyPlaying.Track.Album.Images.First().Url" class="card-img-top" alt="@currentlyPlaying.Track.Album.Name">
+                        <div class="card-body">
+                            <a href="@currentlyPlaying.Track.Uri">
+                                <h5 class="card-title">@currentlyPlaying.Track.Album.Name</h5>
+                            </a>
+                            <h5 class="card-text">@currentlyPlaying.Track.Name</h5>
+                            <p class="card-text">@currentlyPlaying.Track.Album.Type.ToUpper()</p>
+                            <p class="card-text">Release Date: @currentlyPlaying.Track.Album.ReleaseDate</p>
+                            <p class="card-text">You played this @currentlyPlaying.Track.Type at: @currentlyPlaying.Timestamp</p>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <small class="text-muted">@string.Join(" | ", currentlyPlaying.Track.Album.Artists.Select(x => x.Name))</small>
+                        </div>
+                    </div>
+                    <button type="submit">test</button>
+                </form>
+            }
+            else
+            {
+                <div class="card bg-white border-0" style="min-width: 340px; max-width: 340px;">
+
+                    <div class="card-body">
+                        <h5 class="card-title">There is no currently playing songs</h5>
+                        <p class="card-text">Play a song or two then see what happens</p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <small class="text-muted">Yup try mate</small>
+                    </div>
+                </div>
+            }
+
+        </div>*@
+
+    @*<h5>Recently Played</h5>
+
+        <div class="card-deck">
+            @foreach (var tracks in uniqueRecentlyPlayed)
+            {
+
+                <div class="card bg-white border-0" style="min-width: 340px; max-width: 340px;">
+                    <img src="@tracks.Track.Album.Images.First().Url" class="card-img-top" alt="@tracks.Track.Album.Name">
+                    <div class="card-body">
+
+                        <a href="@tracks.Track.Uri">
+                            <h5 class="card-title">@tracks.Track.Album.Name</h5>
+                        </a>
+                        <h5 class="card-text">@tracks.Track.Name</h5>
+                        <p class="card-text">@tracks.Track.Album.Type.ToUpper()</p>
+                        <p class="card-text">Release Date: @tracks.Track.Album.ReleaseDate</p>
+                        <p class="card-text">You played this @tracks.Track.Type at: @tracks.PlayedAt</p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <small class="text-muted">@string.Join(" | ", tracks.Track.Album.Artists.Select(x => x.Name))</small>
+                    </div>
+                </div>
+
+            }
+        </div>*@
+
+    <form asp-controller="Spotify" asp-action="Share" method="post">
+
+        @for (var i = 0; i < Model.Album.Count; i++)
+        {
+            <!--Todo: Make this a partial-->
+            <input type="hidden" asp-for="@Model.Album[i].Id" />
+
+            <div class="row no-gutters bg-light position-relative">
+                <div class="col-md-6 mb-md-0 p-md-4">
+                    <img src="@Model.Album[i].Image.Url" class="w-100" alt="@Model.Album[i].Name">
+                </div>
+                <div class="col-md-6 position-static p-4 pl-md-0">
+                    <h5 class="mt-0">@Model.Album[i].Name</h5>
+                    <p class="mt-0">Release Date: @Model.Album[i].ReleaseDate</p>
+                    <p class="mt-0">You Added this album on: @Model.Album[i].AddedAt</p>
+                    <p class="mt-0">@Model.Album[i].AlbumType.</p>
+                    <small class="text-muted">@string.Join(" | ", Model.Album[i].Artists.Select(x => x.Name))</small>
+
+                    <!--Todo: Make this a partial-->
+                    @if (Model.Album[i].AlbumType.ToLower() == "album")
+                    {
+                        <div class="btn-outline-primary mb-5" data-toggle="collapse" data-target="#collapse_@i" aria-expanded="false" aria-controls="collapse_@i">
+                            Tracks
+                        </div>
+
+                        <div class="mb-3">
+                            <p> Share Album</p>
+
+                            <input type="checkbox" data-toggle="toggle" data-on="Album" data-off="Album" data-onstyle="success" data-offstyle="danger" data-width="100" data-height="5"
+                                   asp-for="@Model.Album[i].Shared" />
+
+                            <div class="border-dark border mt-5"></div>
+                        </div>
+                        @for (int j = 0; j < Model.Album[i].Tracks.SongsList.Count; j++)
+                        {
+                            var first = j == 0 ? "show" : "";
+
+                            <div class="collapse border-bottom" id="collapse_@i">
+                                <input name="album[@i].Tracks[@j].Id" type="hidden" value="@Model.Album[i].Tracks.SongsList[j].Id" />
+
+                                <a class="position-absolute" href="@Model.Album[i].Tracks.SongsList[j].Uri">@Model.Album[i].Tracks.SongsList[j].Name </a>
+                                <div class="d-flex justify-content-end">
+                                    <input name="album[@i].Tracks[@j].Shared" type="checkbox" data-toggle="toggle" data-on="Share" data-off="track" data-onstyle="success" data-offstyle="danger" data-width="100" data-height="5"
+                                          asp-for="@Model.Album[i].Tracks.SongsList[j].Shared"  />
+                                </div>
+                            </div>
+
+                        }
+                    }
+                </div>
+            </div>
+            <button class="btn btn-dark btn-block" type="submit">Share</button>
+
+            @*<div class="card bg-white border-0" style="min-width: 340px; max-width: 340px;">
+
+                <img src="@Model.Album[i].Image.Url" class="card-img-top" alt="@Model.Album[i].Name">
+                <div class="card-body">
+                    <a href="@Model.Album[i].Uri">
+                        <h5 class="card-title">@Model.Album[i].Name</h5>
+                    </a>
+                    <p class="card-text">Release Date: @Model.Album[i].ReleaseDate</p>
+                    <p class="card-text">You Added this album on: @Model.Album[i].AddedAt</p>
+                    <p class="card-text">@Model.Album[i].AlbumType.</p>
+
+                </div>
+                <div class="card-footer bg-white">
+                    <small class="text-muted">@string.Join(" | ", Model.Album[i].Artists.Select(x => x.Name))</small>
+                    <input type="checkbox" asp-for="@Model.Album[i].Shared" />
+                </div>
+
+            </div>*@
+
+        }
+    </form>
+</div>
