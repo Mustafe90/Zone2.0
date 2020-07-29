@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Zone.Website.Domain;
 using Zone.Website.Services;
 
-namespace Zone
+namespace Zone.Website
 {
     public class Startup
     {

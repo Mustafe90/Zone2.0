@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Zone.Core.Models;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Zone.Services
+namespace Zone.Website.Services
 {
     public class SpotifyHttpClientService
     {

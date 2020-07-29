@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Zone.Core.Models
+﻿namespace Zone.Core.Models
 {
     public class UserTrackDataModelDataModel : TrackDataModel
     {

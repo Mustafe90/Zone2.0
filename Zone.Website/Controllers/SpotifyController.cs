@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Spotify.OAuth;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Zone.Website.Domain;
-using Zone.Website.Services;
 using Zone.Website.ViewModels;
 
 namespace Zone.Website.Controllers
@@ -34,7 +30,7 @@ namespace Zone.Website.Controllers
             {
                 return null;
             }
-            
+
             return null;
         }
     }
