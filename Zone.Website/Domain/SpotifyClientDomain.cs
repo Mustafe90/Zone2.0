@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
+using Spotify.OAuth;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Spotify.OAuth;
+using Zone.Core.Models;
 using Zone.Website.Services;
 using Zone.Website.ViewModels;
 
@@ -12,16 +15,18 @@ namespace Zone.Website.Domain
     {
         private readonly SpotifyHttpClientService _service;
         private readonly IHttpContextAccessor _httpContext;
+        private readonly IMemoryCache _cache;
 
-        public SpotifyClientDomain(SpotifyHttpClientService service, IHttpContextAccessor accessor)
+        public SpotifyClientDomain(SpotifyHttpClientService service, IHttpContextAccessor accessor, IMemoryCache cache)
         {
             _service = service;
             _httpContext = accessor;
+            _cache = cache;
         }
 
         public async Task<AlbumsViewModel> GetAlbums()
         {
-            var token = await _httpContext.HttpContext.GetTokenAsync(SpotifyDefaults.AuthenticationScheme,"access_token");
+            var token = await _httpContext.HttpContext.GetTokenAsync(SpotifyDefaults.AuthenticationScheme, "access_token");
             var model = await _service.GetAlbums(token);
 
             if (model == null)
@@ -30,6 +35,18 @@ namespace Zone.Website.Domain
                 return null;
             }
 
+            CacheAlbums(model);
+
+            foreach (var albumContainer in model.Albums)
+            {
+               CacheTracks(albumContainer); 
+            }
+
+            return AlbumsViewModel(model);
+        }
+
+        private static AlbumsViewModel AlbumsViewModel(AlbumCollection model)
+        {
             return new AlbumsViewModel
             {
                 Album = model.Albums.Select(x => new AlbumViewModel
@@ -70,6 +87,46 @@ namespace Zone.Website.Domain
                     AlbumType = x.Album.AlbumType
                 }).ToList()
             };
+        }
+
+        protected void CacheAlbums(AlbumCollection model)
+        {
+            foreach (var albumContainer in model.Albums)
+            {
+                var albumCached = _cache.TryGetValue(albumContainer.Album.Id, out _);
+
+                if (!albumCached)
+                {
+                    _cache.Set(albumContainer.Album.Id, albumContainer.Album, new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpiration = DateTimeOffset.UtcNow.AddHours(5),
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(5),
+                        SlidingExpiration = TimeSpan.FromHours(1),
+                    });
+                }
+            }
+        }
+        protected void CacheTracks(AlbumContainer model)
+        {
+            if (model.Album.Tracks?.SongsList == null)
+            {
+                return;
+            }
+
+            foreach (var track in model.Album.Tracks.SongsList)
+            {
+                var trackCached = _cache.TryGetValue(track.Id, out _);
+
+                if (!trackCached)
+                {
+                    _cache.Set(track.Id, track, new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpiration = DateTimeOffset.UtcNow.AddHours(5),
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(5),
+                        SlidingExpiration = TimeSpan.FromHours(1),
+                    });
+                }
+            }
         }
     }
 }

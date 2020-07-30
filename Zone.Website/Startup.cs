@@ -29,7 +29,10 @@ namespace Zone.Website
         {
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
+            services.AddMemoryCache();
+
             services.AddTransient<SpotifyClientDomain>(); 
+            services.AddTransient<ShareClientDomain>(); 
             
             //Utilises IHttpClientFactory to manage the life cycle of our http client
             services.AddHttpClient<SpotifyHttpClientService>(client =>
