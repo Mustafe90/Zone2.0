@@ -10,6 +10,7 @@ using Spotify.OAuth;
 using System;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
+using Zone.Core.Service;
 using Zone.Website.Domain;
 using Zone.Website.Services;
 
@@ -39,6 +40,13 @@ namespace Zone.Website
             {
                 client.Timeout = TimeSpan.FromSeconds(80);
                 client.BaseAddress = new Uri("https://api.spotify.com");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            });
+            services.AddHttpClient<ShareHttpClientService>(client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(80);
+                client.BaseAddress = new Uri("https://localhost:SomePortMate");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
