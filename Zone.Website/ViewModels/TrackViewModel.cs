@@ -4,6 +4,19 @@ namespace Zone.Website.ViewModels
 {
     public class TrackViewModel
     {
+        protected bool Equals(TrackViewModel other)
+        {
+            return Name == other.Name && Id == other.Id;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((TrackViewModel) obj);
+        }
+
         public TrackViewModel()
         {
             Artists = new List<ArtistViewModel>();
