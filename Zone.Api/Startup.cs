@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Zone.Api
 {
@@ -19,14 +23,27 @@ namespace Zone.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder().
+                    RequireAuthenticatedUser()
+                    .Build();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
-            //Secure with AD using JWT
-            //.AddJwtBearer(options =>
-            //{
-            //    options.
-            //})
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) //Todo:  Secure with AD using JWT
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Mustafe is beautiful")),
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateIssuerSigningKey = true
+                    };
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,20 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Zone.Core.Models;
+using Zone.Core.Service;
 using Zone.Website.ViewModels;
 
 namespace Zone.Website.Domain
 {
     public class ShareClientDomain
     {
+        private readonly ShareHttpClientService _shareHttpClient;
         private readonly IMemoryCache _cache;
-
-        public ShareClientDomain(IMemoryCache cache)
+        
+        public ShareClientDomain(ShareHttpClientService shareHttpClient, IMemoryCache cache)
         {
+            _shareHttpClient = shareHttpClient;
             _cache = cache;
         }
 
-        public bool ShareAlbums(ICollection<ShareAlbum> sharedAlbums)
+        public async Task<bool> ShareAlbums(ICollection<ShareAlbum> sharedAlbums)
         {
 
             if (sharedAlbums == null || !sharedAlbums.Any())
@@ -31,6 +34,7 @@ namespace Zone.Website.Domain
             var albums = GetAlbumsInMemory(includeAlbums);
 
             //Call the api with albums
+            var content = await _shareHttpClient.ShareAlbums();
 
             return true;
         }

@@ -26,7 +26,7 @@ namespace Zone.Website.Controllers
             return View(albums);
         }
         [HttpPost]
-        public IActionResult Share([FromForm] ICollection<ShareAlbum> album)
+        public async Task<IActionResult> Share([FromForm] ICollection<ShareAlbum> album)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +34,7 @@ namespace Zone.Website.Controllers
                 return null;
             }
 
-            _clientDomain.ShareAlbums(album);
+           var content = await _clientDomain.ShareAlbums(album);
             _clientDomain.ShareTracks(album);
 
             return null;

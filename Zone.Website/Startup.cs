@@ -46,7 +46,7 @@ namespace Zone.Website
             services.AddHttpClient<ShareHttpClientService>(client =>
             {
                 client.Timeout = TimeSpan.FromSeconds(80);
-                client.BaseAddress = new Uri("https://localhost:SomePortMate");
+                client.BaseAddress = new Uri("https://localhost:44326");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
