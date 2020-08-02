@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -55,10 +54,8 @@ namespace Spotify.OAuth
 
             //user session + claimIdentity
             var context = new OAuthCreatingTicketContext
-                (new ClaimsPrincipal(identity), properties, Context, Scheme, Options, Backchannel, tokens, new JObject
-            {
-                payload.RootElement
-            });
+                (new ClaimsPrincipal(identity), properties, Context, Scheme, Options, Backchannel, tokens,payload.RootElement
+            );
 
             context.RunClaimActions();
             await Events.CreatingTicket(context);
