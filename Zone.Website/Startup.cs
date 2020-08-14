@@ -57,14 +57,14 @@ namespace Zone.Website
                         option.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                         option.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     })
-                .AddOpenIdConnect(options =>
-                {
-                    options.ClientId = "4c753863-092d-44d9-943c-9c27e28b5099";
-                    options.Authority = "https://login.microsoftonline.com/74c6bfb9-08e2-4a30-a7d1-a8ef361cd197";
-                    options.SignedOutRedirectUri = "/";
-                    options.CallbackPath = "/auth/signin-callback";
-                    options.ResponseType = OpenIdConnectResponseType.IdToken;
-                })
+                //.AddOpenIdConnect(options =>
+                //{
+                //    options.ClientId = "4c753863-092d-44d9-943c-9c27e28b5099";
+                //    options.Authority = "https://login.microsoftonline.com/74c6bfb9-08e2-4a30-a7d1-a8ef361cd197";
+                //    options.SignedOutRedirectUri = "/";
+                //    options.CallbackPath = "/auth/signin-callback";
+                //    options.ResponseType = OpenIdConnectResponseType.IdToken;
+                //})
                 .AddSpotify(options =>
                 {
                     options.CallbackPath = "/auth/spotify-callback";
